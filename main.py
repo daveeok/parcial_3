@@ -7,9 +7,6 @@ productos ={
 
 }
 pedido = []
-codigo = int(input("codigo: "))
-cantidad = int(input("Cantidad"))
-
 
 def mostrarMenu():
     print(f"""
@@ -17,28 +14,36 @@ def mostrarMenu():
     1. Mostrar productos
     2. Agregar producto al pedido
     3. Finalizar""")
-    seleccionarOpcion
+    seleccionarOpcion()
+
+def volverMenu():
+    volver = input("Presione [Enter] para volver al menu.")
+    mostrarMenu()
 
 def seleccionarOpcion():
-    opcion = input("\nIngrese una opcion: ")
+    opcion = int(input("Ingrese una opcion: "))
     if opcion == 1:
         mostrarProductos(productos)
     elif opcion == 2:
-        registrarPorducto(productos , pedido , codigo, cantidad)
+        registrarPorducto(productos, pedido)
     else: SystemExit
 
 
 def mostrarProductos(productos):
     for codigo, (nombre, precio, stock) in productos.items():
         print(f"Código: {codigo}, {nombre}, ${precio}, stock: {stock}")
+    volverMenu()
 
-    
-
-def registrarPorducto(productos , pedido , codigo, cantidad):
+def registrarPorducto(productos, pedido):
+    pedido = []
+    codigo = int(input("codigo: "))
+    cantidad = int(input("Cantidad: "))
     if codigo in productos:
-        print("Existe")
+        nombre, precio, existencias = productos[codigo]
+        pedido.append((nombre, precio, cantidad))
+        print(pedido)
     else:
         print("Producto no existente")
 
 
-mostrarProductos(productos)
+mostrarMenu()
