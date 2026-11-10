@@ -38,15 +38,18 @@ def registrarPorducto(productos, pedido):
     while True:
         codigo = int(input("codigo: "))
         if codigo in productos:
-            cantidad = int(input("Cantidad: "))
             nombre, precio, existencias = productos[codigo]
-            pedido.append((nombre, precio, cantidad))
-            print(pedido)
-            confirmar = input("¿Agregar otro pedido al prodcuto? s/n ")
-            if not "s" in confirmar:
-                mostrarMenu()
-                break
-            else: None
+            cantidad = int(input("Cantidad: "))
+            if cantidad > existencias:
+                print("Stock insuficiente, ingrese un valor menor")
+            else:
+                pedido.append((nombre, precio, cantidad))
+                print(pedido)
+                confirmar = input("¿Agregar otro pedido al prodcuto? s/n ")
+                if not "s" in confirmar:
+                    mostrarMenu()
+                    break
+                else: None
         else:
             print("El prodcuto no existe")
             confirmar = input("Producto no existente, ¿intentar de nuevo? s/n ")
