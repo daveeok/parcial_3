@@ -13,7 +13,8 @@ def mostrarMenu():
     ======MENU======
     1. Mostrar productos
     2. Agregar producto al pedido
-    3. Finalizar""")
+    3. Finalizar pedido
+    0. Salir""")
     seleccionarOpcion()
 
 def volverMenu():
@@ -26,7 +27,11 @@ def seleccionarOpcion():
         mostrarProductos(productos)
     elif opcion == 2:
         registrarPorducto(productos, pedido)
-    else: SystemExit
+    elif opcion == 3:
+        mostrarResumen(pedido)
+    else: 
+        print("Saliendo")
+        SystemExit
 
 
 def mostrarProductos(productos):
@@ -40,11 +45,14 @@ def registrarPorducto(productos, pedido):
         if codigo in productos:
             nombre, precio, existencias = productos[codigo]
             cantidad = int(input("Cantidad: "))
-            if cantidad > existencias:
+            if cantidad <= 0:
+                print("Cantidad invalida, intente nuevamente")
+            elif cantidad > existencias:
                 print("Stock insuficiente, ingrese un valor menor")
             else:
-                pedido.append((nombre, precio, cantidad))
-                print(pedido)
+                pedido.append((codigo, nombre, cantidad, precio * cantidad))
+                print(f"exito, aregaste {pedido} a tu pedido")
+                productos[codigo] = (nombre, precio, existencias - cantidad)
                 confirmar = input("¿Agregar otro pedido al prodcuto? s/n ")
                 if not "s" in confirmar:
                     mostrarMenu()
@@ -57,5 +65,27 @@ def registrarPorducto(productos, pedido):
                 mostrarMenu()
                 break
             else: None
+
+def calcular_total(pedido):
+    total = 0
+    for codigo, nombre, cantidad, subtotal in pedido:
+        total += subtotal
+    return total
+
+def mostrarResumen(pedido):
+    total = calcular_total(pedido)
+    descuento = total * 0.10 if total >= 50000 else 0
+    total_final = total - descuento
+
+    print("\n========== RESUMEN DEL PEDIDO ==========")
+    print(f"{'Producto':<20}{'Cantidad':<10}{'Subtotal'}")
+    print("-" * 41)
+    for codigo, nombre, cantidad, subtotal in pedido:
+        print(f"{nombre:<20}{cantidad:<10}{subtotal}")
+    print("-" * 41)
+    print(f"Total : ${total:.0f}")
+    print(f"Descuento : ${descuento:.0f}")
+    print(f"TOTAL A PAGAR : ${total_final:.0f}")
+    print("========================================")
 
 mostrarMenu()
